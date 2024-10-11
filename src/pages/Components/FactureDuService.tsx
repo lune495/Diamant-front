@@ -26,7 +26,7 @@ const handlePrint2=()=>{
                 <div className="flex flex-col items-center justify-center">
                     <img className="w-10 ltr:-ml-1 rtl:-mr-1 inline" src="/assets/images/logo_chifa.png" alt="logo" />
                     <div>CENTRE MEDICO-SOCIAL</div>
-                    <div>CHIFAA</div>
+                    <div>DIAMANT</div>
                     <div style={{borderWidth:2}} className="h-px w-full border-b border-[#000205] mb-2"></div>
                     <div>No 23 Parcelles Assinies-Unité 24</div>
                     <div>Tel: 33 835 27 58 / Fax: 70 984 53 34</div>

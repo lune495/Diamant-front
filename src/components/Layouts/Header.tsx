@@ -123,7 +123,7 @@ const Header = () => {
                     <div className="horizontal-logo flex lg:hidden justify-between items-center ltr:mr-2 rtl:ml-2">
                         <Link to="/" className="main-logo flex items-center shrink-0">
                             <img className="w-10 ltr:-ml-1 rtl:-mr-1 inline" src="/assets/images/logo_chifa.png" alt="logo" />
-                            <span className="text-xl ltr:ml-1.5 rtl:mr-1.5  font-bold  align-middle hidden md:inline dark:text-white-light transition-all duration-300">CHIFAA</span>
+                            <span className="text-xl ltr:ml-1.5 rtl:mr-1.5  font-bold  align-middle hidden md:inline dark:text-white-light transition-all duration-300">DIAMANT</span>
                         </Link>
                         <button
                             type="button"
@@ -270,7 +270,7 @@ const Header = () => {
                                             <img className="rounded-md w-10 h-10 object-cover" src="/assets/images/avatar.png" alt="userProfile" />
                                             <div className="ltr:pl-4 rtl:pr-4">
                                                 <h4 className="text-base">
-                                                   {user?.name || "Chifaa"}
+                                                   {user?.name || "Diamant"}
                                                     {/* <span className="text-xs bg-success-light rounded text-success px-1 ltr:ml-2 rtl:ml-2">Pro</span> */}
                                                 </h4>
                                                 <button type="button" className="text-black/60 hover:text-primary dark:text-dark-light/60 dark:hover:text-white">
