@@ -162,6 +162,7 @@ const Dossier = () => {
                         <table className="table-striped table-hover">
                             <thead>
                                 <tr>
+                                    <th>Numero Dossier</th>
                                     <th>Nom</th>
                                     <th>Prenom</th>
                                     <th>Téléphone</th>
@@ -173,6 +174,11 @@ const Dossier = () => {
                                 {filteredItems?.map((contact: any) => {
                                     return (
                                         <tr style={{backgroundColor:"#e0dfdc"}} key={contact.id}>
+                                            <td>
+                                                <div className="flex items-center w-max">
+                                                    <div>{contact?.numero}</div>
+                                                </div>
+                                            </td>
                                             <td>
                                                 <div className="flex items-center w-max">
                                                     <div>{contact?.patient?.nom}</div>
