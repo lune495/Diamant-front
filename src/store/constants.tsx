@@ -1,4 +1,5 @@
 export const DOCTEUR_URL=`graphql?query={medecins{nom,prenom,id,module{nom,id}}}`
+export const NOTIF_URL=`graphql?query={notifications{id dossier{numero patient{nom prenom telephone date_naissance}} rdv lu}}`
 export const DOSSIER_URL=`graphql?query={dossiers{id numero patient{nom,prenom,date_naissance,telephone,id}}}`
 export const DEPENSE_URL=`graphql?query={depenses{nom,created_at,montant,id}}`
 export const USER_URL=`graphql?query={users{name,email,role{nom,id},id}}`

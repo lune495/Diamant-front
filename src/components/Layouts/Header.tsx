@@ -7,6 +7,10 @@ import { useTranslation } from 'react-i18next';
 import { toggleSidebar } from '../../store/themeConfigSlice';
 import i18next from 'i18next';
 import Dropdown from '../Dropdown';
+import { getData, sendData } from '../../Methodes';
+import { NOTIF_URL } from '../../store/constants';
+import { dateFormatFr } from './../../store/constants';
+import Notifs from './Notifs';
 
 const Header = () => {
     const location = useLocation();
@@ -86,28 +90,52 @@ const Header = () => {
         setMessages(messages.filter((user) => user.id !== value));
     };
 
-    const [notifications, setNotifications] = useState([
-        {
-            id: 1,
-            profile: 'user-profile.jpeg',
-            message: 'Vous avez une nouvelle notification',
-            time: "il y'a 45 min",
-        },
+    const handleUpdateNotif=async()=>{
+        const data=notificationsCopy?.map((e:any)=>({rdv:e.rdv}))
+        
+        if(!data.length){
+            return
+        }
+
+
+          await sendData(
+            "api/updatenotification",
+            {notifs:data},
+            )
+        .then(async (resp:any)=> {
+           setNotificationsCopy([])
+        })
+        .catch((resp:any) => {
+            
+            let violations = resp?.response?.data?.message ;
+            
+
+        });
+    }
+    const [notificationsCopy, setNotificationsCopy] = useState<any>([])
+    const [notifications, setNotifications] = useState<any>([
+        // {
+        //     id: 1,
+        //     profile: 'user-profile.jpeg',
+        //     message: 'Vous avez une nouvelle notification',
+        //     time: "il y'a 45 min",
+        // },
       
     ]);
+    const [showCustomizer, setShowCustomizer] = useState(false);
 
     useEffect(()=>{
         const el:any=localStorage.getItem("chiffaa_user")
         const userPars=JSON.parse(el)
         setUser(userPars?.user)
-
+        getStatus()
         const el1:any=localStorage.getItem("annee_scolaire")
         const y=JSON.parse(el1)
         setYear(y)
     },[])
 
     const removeNotification = (value: number) => {
-        setNotifications(notifications.filter((user) => user.id !== value));
+        setNotifications(notifications.filter((user:any) => user.id !== value));
     };
 
     const [search, setSearch] = useState(false);
@@ -116,8 +144,16 @@ const Header = () => {
 
     const { t } = useTranslation();
 
+    const getStatus=async()=>{
+        const { data } = await getData(NOTIF_URL);
+        console.log("statut",data)
+        setNotifications(data?.data?.notifications?.filter((e:any)=>e.lu))
+        setNotificationsCopy(data?.data?.notifications?.filter((e:any)=>e.lu))
+    }
+
     return (
         <header className={themeConfig.semidark && themeConfig.menu === 'horizontal' ? 'dark' : ''}>
+           {showCustomizer && <Notifs showCustomizer={showCustomizer} setShowCustomizer={()=>setShowCustomizer(false)}/>}
             <div className="shadow-md">
                 <div className="relative bg-white flex w-full items-center px-5 py-2.5 dark:bg-black">
                     <div className="horizontal-logo flex lg:hidden justify-between items-center ltr:mr-2 rtl:ml-2">
@@ -262,7 +298,7 @@ const Header = () => {
                                 placement={`${isRtl ? 'bottom-start' : 'bottom-end'}`}
                                 btnClassName="relative block p-2 rounded-full bg-white-light/40 dark:bg-dark/40 hover:text-primary hover:bg-white-light/90 dark:hover:bg-dark/60"
                                 button={
-                                    <span>
+                                    <span onClick={handleUpdateNotif}>
                                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                             <path
                                                 d="M19.0001 9.7041V9C19.0001 5.13401 15.8661 2 12.0001 2C8.13407 2 5.00006 5.13401 5.00006 9V9.7041C5.00006 10.5491 4.74995 11.3752 4.28123 12.0783L3.13263 13.8012C2.08349 15.3749 2.88442 17.5139 4.70913 18.0116C9.48258 19.3134 14.5175 19.3134 19.291 18.0116C21.1157 17.5139 21.9166 15.3749 20.8675 13.8012L19.7189 12.0783C19.2502 11.3752 19.0001 10.5491 19.0001 9.7041Z"
@@ -272,10 +308,17 @@ const Header = () => {
                                             <path d="M7.5 19C8.15503 20.7478 9.92246 22 12 22C14.0775 22 15.845 20.7478 16.5 19" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
                                             <path d="M12 6V10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
                                         </svg>
+                                         {(notifications.length > 0 && notificationsCopy.length >0)? <span className="flex absolute items-center justify-center w-3 h-3 ltr:right-0 rtl:left-0 top-0">
+                                            <span style={{padding:10}}  className="badge font-bold fs-12 flex justify-center items-center ltr:-left-[3px] rtl:-right-[3px] -top-[3px]  badge-danger absolute  inline-flex h-full w-full rounded-full bg-danger p-2">
+                                                {notifications.length}
+                                            </span>
+                                        </span>:
+                                       
                                         <span className="flex absolute w-3 h-3 ltr:right-0 rtl:left-0 top-0">
                                             <span className="animate-ping absolute ltr:-left-[3px] rtl:-right-[3px] -top-[3px] inline-flex h-full w-full rounded-full bg-success/50 opacity-75"></span>
                                             <span className="relative inline-flex rounded-full w-[6px] h-[6px] bg-success"></span>
-                                        </span>
+                                        </span>}
+
                                     </span>
                                 }
                             >
@@ -287,16 +330,18 @@ const Header = () => {
                                     </li>
                                     {notifications.length > 0 ? (
                                         <>
-                                            {notifications.map((notification) => {
+                                            {notifications.map((notification:any) => {
                                                 return (
                                                     <li key={notification.id} className="dark:text-white-light/90" onClick={(e) => e.stopPropagation()}>
-                                                        <div className="group flex items-center px-4 py-2">
-                                                            
+                                                        <div className="group flex flex-col items-center px-4 py-2">
+                                                            <div className="ltr:pl-3 rtl:pr-3 flex flex-auto justify-start">
+                                                             <h3 className='font-bold'> Patient {(notification?.dossier?.patient?.prenom || "")+" "+(notification?.dossier?.patient?.nom ||"")}</h3>
+                                                            </div>
                                                             <div className="ltr:pl-3 rtl:pr-3 flex flex-auto">
                                                                 <div className="ltr:pr-3 rtl:pl-3">
                                                                     <h6
                                                                         dangerouslySetInnerHTML={{
-                                                                            __html: notification.message,
+                                                                            __html: "Rendez-vous programmé le "+dateFormatFr(notification?.rdv),
                                                                         }}
                                                                     ></h6>
                                                                     <span className="text-xs block font-normal dark:text-gray-500">{notification.time}</span>
@@ -318,11 +363,12 @@ const Header = () => {
                                             })}
                                             <li>
                                                 <div className="p-4">
-                                                    <button className="btn btn-primary block w-full btn-small">Voir tout</button>
+                                                    <button onClick={()=>setShowCustomizer(true)} className="btn btn-primary block w-full btn-small">Voir tout</button>
                                                 </div>
                                             </li>
                                         </>
                                     ) : (
+                                        <>
                                         <li onClick={(e) => e.stopPropagation()}>
                                             <button type="button" className="!grid place-content-center hover:!bg-transparent text-lg min-h-[200px]">
                                                 <div className="mx-auto ring-4 ring-primary/30 rounded-full mb-4">
@@ -342,9 +388,15 @@ const Header = () => {
                                                         <line x1="12" y1="8" x2="12.01" y2="8"></line>
                                                     </svg>
                                                 </div>
-                                                Vous n'avez pas de notification
+                                                Vous n'avez pas de nouvelle notification
                                             </button>
                                         </li>
+                                         <li>
+                                                <div className="p-4">
+                                                    <button onClick={()=>setShowCustomizer(true)} className="btn btn-primary block w-full btn-small">Voir les anciennes</button>
+                                                </div>
+                                        </li>
+                                        </>
                                     )}
                                 </ul>
                             </Dropdown>

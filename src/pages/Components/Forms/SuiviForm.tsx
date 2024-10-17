@@ -6,8 +6,6 @@ import { getData } from "../../../Methodes";
 
 const SuivieForm:FunctionComponent<BtnProps> = ({open,data,loading,setOpen,handleValidate}) => {
     const [params, setParams] = useState<any>(data?.id?data:{});
-    const [search, setSearch] = useState<any>('');
-    const [current, setCurrent] = useState<any>(false);
     
  
     const changeValue = (e: any) => {
@@ -35,7 +33,7 @@ const SuivieForm:FunctionComponent<BtnProps> = ({open,data,loading,setOpen,handl
                         leaveFrom="opacity-100 scale-100"
                         leaveTo="opacity-0 scale-95"
                     >
-                        <Dialog.Panel style={{borderWidth:2,borderColor:"#ff8041"}} className="panel border-0 p-0 rounded-lg overflow-hidden w-full max-w-lg text-black dark:text-white-dark">
+                        <Dialog.Panel style={{borderWidth:2,borderColor:"#ff8041"}} className="panel border-0 p-0 rounded-lg overflow-hidden w-full max-w-6xl text-black dark:text-white-dark">
                             <button
                                 type="button"
                                 onClick={() => setOpen()}
@@ -61,21 +59,22 @@ const SuivieForm:FunctionComponent<BtnProps> = ({open,data,loading,setOpen,handl
                             </div>
                             <div className="p-5">
                               <form>
-                                
-                              <div className="mb-5">
-                                <label htmlFor="name">Diagnostic</label>
-                                <input id="diagnostic" type="text" placeholder="Entrer le diagnostic" className="form-input" value={params.diagnostic} onChange={(e) => changeValue(e)} />
-                              </div>
-
-                              <div className="mb-5">
-                                <label htmlFor="name">Traitement</label>
-                                <input id="traitement" type="text" placeholder="Entrer le traitement" className="form-input" value={params.traitement} onChange={(e) => changeValue(e)} />
-                              </div>
-                             <div className="mb-5">
-                                <label htmlFor="name">Rendez-vous</label>
-                                <input id="rdv" type="date" placeholder="Entrer le rdv" className="form-input" value={params.rdv} onChange={(e) => changeValue(e)} />
-                              </div>
-
+                                <div className="flex flex-row w-full gap-3">
+                                    <div className="mb-5 w-full">
+                                        <label htmlFor="name">Diagnostic</label>
+                                        <textarea id="diagnostic" style={{minHeight:300}}  placeholder="Entrer le diagnostic" className="form-input" value={params.diagnostic} onChange={(e) => changeValue(e)} />
+                                    </div>
+                                    <div className="mb-5 w-full">
+                                        <label htmlFor="name">Traitement</label>
+                                        <textarea id="traitement" style={{minHeight:300}}  placeholder="Entrer le traitement" className="form-input" value={params.traitement} onChange={(e) => changeValue(e)} />
+                                    </div>
+                                </div>
+                                <div className="flex flex-row w-full gap-3">
+                                    <div className="mb-5 w-full">
+                                        <label htmlFor="name">Date du Rendez-vous</label>
+                                        <input id="rdv" type="date" placeholder="Entrer le rdv" className="form-input" value={params.rdv} onChange={(e) => changeValue(e)} />
+                                    </div>
+                                </div>
                                 <div className="flex justify-end items-center mt-8">
                                     <button type="button" className="btn btn-outline-danger" onClick={() => setOpen()}>
                                         Annuler

@@ -66,7 +66,7 @@ const Suivie = () => {
             
         await sendData(
             "api/suivi",
-            e,
+            payload,
             )
         .then(async (resp:any)=> {
             console.log("resp",resp?.data)
@@ -180,17 +180,17 @@ const Suivie = () => {
                                            
                                            <td>
                                                 <div className="flex items-center w-max">
-                                                    <div>{(contact?.patient?.nom || "")+" "+(contact?.patient?.prenom ||"")}</div>
+                                                    <div>{(contact?.patient?.nom || "")+" "+(contact?.patient?.prenom || "")}</div>
                                                 </div>
                                             </td>
                                             <td>
                                                 <div className="flex items-center w-max">
-                                                    <div>{contact?.diagnostic}</div>
+                                                    <div style={{flexWrap:"wrap"}}>{contact?.diagnostic}</div>
                                                 </div>
                                             </td>
                                             <td>
                                                 <div className="flex items-center w-max">
-                                                    <div>{contact?.traitement}</div>
+                                                    <div style={{flexWrap:"wrap"}}>{contact?.traitement}</div>
                                                 </div>
                                             </td>
                                             <td>
