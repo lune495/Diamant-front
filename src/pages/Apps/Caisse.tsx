@@ -107,8 +107,10 @@ const Caisse = () => {
                 })
                 .catch((resp:any) => {
                     setLoading(false)
-                    let violations = resp?.response?.data?.message ;
-                    console.log("errros",resp)
+                    let violations = resp?.response?.data?.errors ;
+                    showMessage(`${violations}`,'error');
+
+                    console.log("errros",violations)
      
                 });
                 
