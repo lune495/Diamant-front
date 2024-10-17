@@ -24,12 +24,17 @@ const handlePrint2=()=>{
             <a id="pdf-fact" style={{display:"none"}} href={getApiUrl()+"/vente/ticket-pdf-service/"+data?.id} target="_blank">pdf link</a>
             <div className="flex flex-row justify-between">
                 <div className="flex flex-col items-center justify-center">
-                    <img className="w-10 ltr:-ml-1 rtl:-mr-1 inline" src="/assets/images/logo_chifa.png" alt="logo" />
-                    <div>CENTRE MEDICO-SOCIAL</div>
+                    {/* <img className="w-10 ltr:-ml-1 rtl:-mr-1 inline" src="/assets/images/logo_diamant_.png" alt="logo" /> */}
+                    <img
+                    className="w-40"
+                    src="/assets/images/logo_diamant_.png"
+                    alt="logo"
+                />
+                    <div>CLINIQUE MEDICAL</div>
                     <div>DIAMANT</div>
                     <div style={{borderWidth:2}} className="h-px w-full border-b border-[#000205] mb-2"></div>
-                    <div>No 23 Parcelles Assinies-Unité 24</div>
-                    <div>Tel: 33 835 27 58 / Fax: 70 984 53 34</div>
+                    <div>951 Tivaouane Peulh</div>
+                    <div>Tel: 77 735 62 09 / Fax: 76 870 70 30</div>
                 </div>
                 <div>
                     <div className="text-lg font-medium bg-[#fbfbfb] dark:bg-[#121c2c] ltr:pl-5 rtl:pr-5 py-3 ltr:pr-[50px] rtl:pl-[50px]">
