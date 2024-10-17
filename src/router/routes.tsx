@@ -85,7 +85,7 @@ const routes = [
         element: <Dossier />,
     },
       {
-        path: '/apps/suivis/:dossierId/:patientId',
+        path: '/apps/suivis/:dossierId/:patientId/:nom_patient',
         element: <Suivie />,
     },
     {

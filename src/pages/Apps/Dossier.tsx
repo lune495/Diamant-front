@@ -131,7 +131,7 @@ const Dossier = () => {
 
     const handleDetail=(req:any)=> {
         
-        return navigate(`/apps/suivis/${req.id}/${req.patient?.id}`);
+        return navigate(`/apps/suivis/${req.id}/${req.patient?.id}/${req?.patient?.nom+" "+req?.patient?.prenom}`);
     };
 
 

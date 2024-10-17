@@ -38,7 +38,7 @@ const Suivie = () => {
 
     const [search, setSearch] = useState<any>('');
     const [contactList] = useState<any>([]);
-    const { dossierId,patientId } = useParams();
+    const { dossierId,patientId,nom_patient } = useParams();
 
     const [filteredItems, setFilteredItems] = useState<any>([]);
 
@@ -142,7 +142,7 @@ const Suivie = () => {
                     <Loader/>
                 )}
             <div className="flex items-center justify-between flex-wrap gap-4">
-                <h2 className="text-xl">SUIVIE</h2>
+                <h1 className="text-xl font-bold text-center uppercase underline">{nom_patient}</h1>
                 <div className="flex sm:flex-row flex-col sm:items-center sm:gap-3 gap-4 w-full sm:w-auto">
                     <div className="flex gap-3">
                         <div>
@@ -166,7 +166,6 @@ const Suivie = () => {
                         <table className="table-striped table-hover">
                             <thead>
                                 <tr>
-                                    <th>Patient</th>
                                     <th>Diagnostic</th>
                                     <th>Traitement</th>
                                     <th>Rendez-vous</th>
@@ -177,12 +176,7 @@ const Suivie = () => {
                                 {filteredItems?.map((contact: any) => {
                                     return (
                                         <tr style={{backgroundColor:"#e0dfdc"}} key={contact.id}>
-                                           
-                                           <td>
-                                                <div className="flex items-center w-max">
-                                                    <div>{(contact?.patient?.nom || "")+" "+(contact?.patient?.prenom || "")}</div>
-                                                </div>
-                                            </td>
+                                         
                                             <td>
                                                 <div className="flex items-center w-max">
                                                     <div style={{flexWrap:"wrap"}}>{contact?.diagnostic}</div>
