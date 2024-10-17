@@ -299,7 +299,7 @@ const Caisse = () => {
                                             </td>
                                             <td>
                                                 <div className="flex items-center w-max">
-                                                    <div>{(contact?.nom || "")+" "+(contact.prenom ||"")}</div>
+                                                    <div>{(contact?.patient?.prenom || "")+" "+(contact?.patient?.nom ||"")}</div>
                                                 </div>
                                             </td>
                                             <td>
