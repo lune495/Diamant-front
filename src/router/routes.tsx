@@ -9,6 +9,8 @@ const Caisse = lazy(() => import('../pages/Apps/Caisse'));
 const Pharmacie = lazy(() => import('../pages/Apps/Pharmacie'));
 const SituationGeneral = lazy(() => import('../pages/Apps/SituationGeneral'));
 const Docteur = lazy(() => import('../pages/Apps/Docteur'));
+const Suivie = lazy(() => import('../pages/Apps/Suivie'));
+const Dossier = lazy(() => import('../pages/Apps/Dossier'));
 const Service = lazy(() => import('../pages/Apps/Service'));
 const TypeService = lazy(() => import('../pages/Apps/TypeService'));
 const SituationCaisse = lazy(() => import('../pages/Apps/SituationCaisse'));
@@ -77,6 +79,14 @@ const routes = [
     {
         path: '/apps/docteur',
         element: <Docteur />,
+    },
+     {
+        path: '/apps/dossier',
+        element: <Dossier />,
+    },
+      {
+        path: '/apps/suivis/:dossierId/:patientId',
+        element: <Suivie />,
     },
     {
         path: '/apps/pharmacie',

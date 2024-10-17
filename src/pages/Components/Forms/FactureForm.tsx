@@ -32,7 +32,12 @@ const FactureForm:FunctionComponent<BtnProps> = ({service_list,loading,handleSav
 
     const handleService=(e:any)=>{
         setData(e)
-        setParams({...params,type_services:e?.map((el:any)=>({type_service_id:el?.value?.id}))})
+        setParams({...params,type_services:e?.map((el:any)=>({
+                type_service_id:el?.value?.id,
+                module_id:title.id,
+                prix:e.prix,
+                nom:e.nom
+            }))})
     }
 
     useEffect(() => {
@@ -61,12 +66,22 @@ const FactureForm:FunctionComponent<BtnProps> = ({service_list,loading,handleSav
                     </div>
                     <div className="flex flex-row w-full">
                         <div className="mb-5 w-full mr-2">
-                            <label htmlFor="name">Nom complet du patient</label>
-                            <input id="nom_complet" type="text" placeholder="Entrer le nom complet du patient" className="form-input" value={params.nom_complet} onChange={(e) => changeValue(e)} />
+                            <label htmlFor="name">Nom</label>
+                            <input id="nom" type="text" placeholder="Entrer le nom  du patient" className="form-input" value={params.nom} onChange={(e) => changeValue(e)} />
+                        </div>
+                        <div className="mb-5 w-full">
+                            <label htmlFor="name">Prenom</label>
+                            <input id="prenom" type="text" placeholder="Entrer le prenom du patient" className="form-input" value={params.prenom} onChange={(e) => changeValue(e)} />
+                        </div>
+                    </div>
+                     <div className="flex flex-row w-full">
+                        <div className="mb-5 w-full mr-2">
+                            <label htmlFor="name">Date de naissance</label>
+                            <input id="date_naissance" type="date" placeholder="Entrer la date de naissance du patient" className="form-input" value={params.date_naissance} onChange={(e) => changeValue(e)} />
                         </div>
                         <div className="mb-5 w-full">
                             <label htmlFor="name">Téléphone</label>
-                            <input id="adresse" type="text" placeholder="Entrer le téléphone du patient" className="form-input" value={params.adresse} onChange={(e) => changeValue(e)} />
+                            <input id="telephone" type="text" placeholder="Entrer le téléphone du patient" className="form-input" value={params.telephone} onChange={(e) => changeValue(e)} />
                         </div>
                     </div>
                     <div className="flex flex-row w-full">

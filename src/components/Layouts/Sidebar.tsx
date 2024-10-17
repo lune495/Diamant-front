@@ -6,7 +6,7 @@ import { toggleSidebar } from '../../store/themeConfigSlice';
 import AnimateHeight from 'react-animate-height';
 import { IRootState } from '../../store';
 import { useState, useEffect } from 'react';
-import { BanknotesIcon, BuildingLibraryIcon, BuildingStorefrontIcon, CogIcon, CurrencyDollarIcon, NewspaperIcon, QueueListIcon, ShoppingCartIcon, TableCellsIcon, TagIcon, UserGroupIcon, UserIcon, WindowIcon } from '@heroicons/react/24/outline';
+import { BanknotesIcon, BuildingLibraryIcon, BuildingStorefrontIcon, CogIcon, CurrencyDollarIcon, DocumentIcon, NewspaperIcon, QueueListIcon, ShoppingCartIcon, TableCellsIcon, TagIcon, UserGroupIcon, UserIcon, WindowIcon } from '@heroicons/react/24/outline';
 
 const Sidebar = () => {
     const [currentMenu, setCurrentMenu] = useState<string>('');
@@ -195,6 +195,14 @@ const Sidebar = () => {
                                             <div className="flex items-center">
                                                <BuildingLibraryIcon strokeWidth={2} className="h-6 w-6 hover text-info " />
                                                 <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-white dark:group-hover:text-white">{t('Depense')}</span>
+                                            </div>
+                                        </NavLink>
+                                    </li>
+                                     <li className="nav-item">
+                                        <NavLink to="/apps/dossier" className="group">
+                                            <div className="flex items-center">
+                                               <DocumentIcon strokeWidth={2} className="h-6 w-6 hover text-info " />
+                                                <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-white dark:group-hover:text-white">{t('Dossier patient')}</span>
                                             </div>
                                         </NavLink>
                                     </li>
