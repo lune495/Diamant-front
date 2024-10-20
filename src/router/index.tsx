@@ -10,6 +10,8 @@ const finalRoutes = routes.map((route) => {
     };
 });
 
-const router = createBrowserRouter(finalRoutes);
+const router = createBrowserRouter(finalRoutes, {
+  basename: "/clinic"
+});
 
 export default router;

@@ -1,16 +1,13 @@
-# Étape 1 : Construction de l'application
-FROM node:18-alpine AS build
+FROM node:16-alpine as build-stage
 WORKDIR /app
-COPY package.json package-lock.json ./
+COPY package*.json ./
 RUN npm install
-COPY . .
+COPY ./ .
+
+# ARG env
+# RUN npm run build --mode $env
 RUN npm run build
-
-# Étape 2 : Serveur Nginx pour héberger le build
-FROM nginx:alpine
-COPY --from=build /app/dist /usr/share/nginx/html
-COPY ./nginx.conf /etc/nginx/conf.d/default.conf
-
-# Exposer le port 80
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+FROM nginx as production-stage
+RUN mkdir /app
+COPY --from=build-stage /app/dist /app/clinic
+COPY nginx.conf /etc/nginx/nginx.conf

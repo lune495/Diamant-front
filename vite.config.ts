@@ -13,4 +13,5 @@ export default defineConfig({
     server: {
       port: 5180 // change here
   },
+   base: '/clinic'
 });

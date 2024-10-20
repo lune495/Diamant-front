@@ -12,6 +12,9 @@ import { NOTIF_URL } from '../../store/constants';
 import { dateFormatFr } from './../../store/constants';
 import Notifs from './Notifs';
 
+import logo from "/assets/images/logo.png"
+
+
 const Header = () => {
     const location = useLocation();
     useEffect(() => {
