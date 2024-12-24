@@ -115,7 +115,7 @@ const Depense = () => {
     const getStatus=async()=>{
         const { data } = await getData(DEPENSE_URL);
         console.log("statut",data)
-        setFilteredItems(data?.data?.depenses)
+        setFilteredItems(data?.data?.depenses || [])
         setShowLoader(false)
     }
 

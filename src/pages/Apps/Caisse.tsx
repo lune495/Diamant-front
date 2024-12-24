@@ -171,8 +171,8 @@ const Caisse = () => {
 
     const getStatus=async()=>{
         const { data } = await getData(SERVICE_URL);
-        setFilteredItems(data?.data?.services);
-        setFilteredItemsInit(data?.data?.services)
+        setFilteredItems(data?.data?.services || []);
+        setFilteredItemsInit(data?.data?.services || [])
     }
 
     const CloseCaisse=()=>{

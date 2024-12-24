@@ -3,16 +3,13 @@ import { Dialog, Transition } from '@headlessui/react';
 import Swal from 'sweetalert2';
 import { useDispatch } from 'react-redux';
 import { setPageTitle } from '../../store/themeConfigSlice';
-import Btn from '../Components/Buttons/Btn';
 import { getData, sendData } from '../../Methodes';
 import IconBtn from '../Components/Buttons/IconBtn';
 import Loader from '../Components/Utils/Loader';
-import DepenseForm from '../Components/Forms/DepenseForm';
-import { dateFormatFr, DEPENSE_URL, DOSSIER_URL } from '../../store/constants';
-import DocForm from '../Components/Forms/DocForm';
-import { useNavigate, useParams } from 'react-router-dom';
+import { FAMILLE_URL, MODULE_URL } from '../../store/constants';
+import CategorieForm from '../Components/Forms/CategorieForm';
 
-const Dossier = () => {
+const Famille = () => {
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch(setPageTitle('Profil'));
@@ -37,47 +34,47 @@ const Dossier = () => {
 
     const [search, setSearch] = useState<any>('');
     const [contactList] = useState<any>([]);
-    const { dossierId } = useParams();
-    const navigate = useNavigate();
-
 
     const [filteredItems, setFilteredItems] = useState<any>([]);
 
-   
+    useEffect(() => {
+        setFilteredItems(() => {
+            return contactList.filter((item: any) => {
+                return item.modePaiement.toLowerCase().includes(search.toLowerCase());
+            });
+        });
+    }, [search, contactList]);
 
     useEffect(() => {
        getStatus()
     }, []);
 
     const saveUser = async(e:any) => {
-        if (!e.patient_id) {
-            showMessage('Patient obligatoire.', 'error');
+        
+        if (!e.nom) {
+            showMessage('Nom obligatoire.', 'error');
             return true;
         }
-       
         setLoading(true)
-        let msg="ajouté"
+        let msg=e?.id?"modifié":"ajouté"
        
-            
             await sendData(
-                "api/dossier",
+                "api/familles",
                 e,
                )
                 .then(async (resp:any)=> {
                    console.log("resp",resp?.data)
                    getStatus()
                    setParams({})
-                   showMessage(`Dossier ${msg} avec succès.`);
+                   showMessage(`Famille ${msg} avec succès.`);
                 })
                 .catch((resp:any) => {
-                 
+                    console.log("error",resp)
                     let violations = resp?.response?.data?.message ;
-                 
-     
+                    
                 });
-                setLoading(false)
                 setAddContactModal(false);
-
+                setLoading(false)
         
     };
 
@@ -95,9 +92,11 @@ const Dossier = () => {
     }
 
     const editUser = (user: any = null) => {
-        setParams({});
+        const json = JSON.parse(JSON.stringify(defaultParams));
+        setParams(json);
         if (user) {
-            setParams(user);
+            let json1 = JSON.parse(JSON.stringify(user));
+            setParams(json1);
         }
         setAddContactModal(true);
     };
@@ -108,9 +107,9 @@ const Dossier = () => {
     };
 
     const getStatus=async()=>{
-        const { data } = await getData(DOSSIER_URL);
+        const { data } = await getData(FAMILLE_URL);
         console.log("statut",data)
-        setFilteredItems(data?.data?.dossiers || [])
+        setFilteredItems(data?.data?.familles)
         setShowLoader(false)
     }
 
@@ -129,31 +128,28 @@ const Dossier = () => {
         });
     };
 
-    const handleDetail=(req:any)=> {
-        
-        return navigate(`/apps/suivis/${req.id}/${req.patient?.id}/${req?.patient?.nom+" "+req?.patient?.prenom}`);
-    };
-
-
     return (
         <div>
              {showLoader && (
                     <Loader/>
                 )}
             <div className="flex items-center justify-between flex-wrap gap-4">
-                <h2 className="text-xl">Dossier patient</h2>
+                <h2 className="text-xl">FAMILLE DE PRODUIT</h2>
                 <div className="flex sm:flex-row flex-col sm:items-center sm:gap-3 gap-4 w-full sm:w-auto">
                     <div className="flex gap-3">
                         <div>
                             <button type="button" className="btn btn-primary" onClick={() => editUser()}>
-                                <svg className="w-5 h-5 ltr:mr-2 rtl:ml-2" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round">
-                                        <line x1="12" y1="5" x2="12" y2="19"></line>
-                                        <line x1="5" y1="12" x2="19" y2="12"></line>
-                                </svg>
-                                Nouveau dossier
+                            <svg className="w-5 h-5 ltr:mr-2 rtl:ml-2" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round">
+                                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                            </svg>
+                                Nouvelle catégorie
                             </button>
                         </div>
+                       
+                       
                     </div>
+                   
                 </div>
             </div>
             {value === 'list' && (
@@ -162,11 +158,7 @@ const Dossier = () => {
                         <table className="table-striped table-hover">
                             <thead>
                                 <tr>
-                                    <th>Numero Dossier</th>
                                     <th>Nom</th>
-                                    <th>Prenom</th>
-                                    <th>Téléphone</th>
-                                    <th>Date naissance</th>
                                     <th className="!text-center">Actions</th>
                                 </tr>
                             </thead>
@@ -176,34 +168,19 @@ const Dossier = () => {
                                         <tr style={{backgroundColor:"#e0dfdc"}} key={contact.id}>
                                             <td>
                                                 <div className="flex items-center w-max">
-                                                    <div>{contact?.numero}</div>
+                                                    <div>{contact?.nom}</div>
                                                 </div>
                                             </td>
-                                            <td>
-                                                <div className="flex items-center w-max">
-                                                    <div>{contact?.patient?.nom}</div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div className="flex items-center w-max">
-                                                    <div>{contact?.patient?.prenom}</div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div className="flex items-center w-max">
-                                                    <div>{contact?.patient?.telephone}</div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div className="flex items-center w-max">
-                                                 <div>{dateFormatFr(contact?.patient?.date_naissance)}</div>
-                                                </div>
-                                            </td>
+                                           
                                             <td>
                                                 <div className="flex gap-4 items-center justify-center">
-                                                   <button type="button" className="btn btn-outline-primary ltr:ml-4 rtl:mr-4" onClick={()=>handleDetail(contact)}>
-                                                                Suivie
-                                                   </button>
+                                                  <IconBtn
+                                                    isUpdate={true}
+                                                    // isDelete={true}
+                                                    // handleDelete={()=>deleteUser(contact)}
+                                                    handleUpdate={()=>editUser(contact)}
+                                                   />
+                                                 
                                                 </div>
                                             </td>
                                         </tr>
@@ -215,10 +192,10 @@ const Dossier = () => {
                 </div>
             )}
 
-            {addContactModal && <DocForm data={params} loading={loading} open={addContactModal} setOpen={()=>{setAddContactModal(false);setParams({})}} handleValidate={(e:any)=>saveUser(e)}/>}
+            {addContactModal && <CategorieForm loading={loading} data={params} open={addContactModal} setOpen={()=>{setAddContactModal(false);setParams({})}} handleValidate={(e:any)=>saveUser(e)}/>}
           
         </div>
     );
 };
 
-export default Dossier;
+export default Famille;

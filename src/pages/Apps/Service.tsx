@@ -111,7 +111,7 @@ const Service = () => {
     const getStatus=async()=>{
         const { data } = await getData(MODULE_URL);
         console.log("statut",data)
-        setFilteredItems(data?.data?.modules)
+        setFilteredItems(data?.data?.modules || [])
         setShowLoader(false)
     }
 

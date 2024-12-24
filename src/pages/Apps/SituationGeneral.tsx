@@ -179,7 +179,7 @@ const SituationGeneral:FunctionComponent<BtnProps> = ({loadingForm}) => {
 
     const getModule=async()=>{
         const { data } = await getData(MODULE_URL);
-        setModules(data?.data?.modules?.map((val:any)=>({label:val?.nom,value:val?.nom})))
+        setModules((data?.data?.modules || [])?.map((val:any)=>({label:val?.nom,value:val?.nom})))
     }
 
     const showMessage = (msg = '', type = 'success') => {
@@ -280,7 +280,7 @@ const SituationGeneral:FunctionComponent<BtnProps> = ({loadingForm}) => {
                                             </td>
                                             <td>
                                                 <div className="flex items-center w-max">
-                                                    <div>{contact?.nom_complet}</div>
+                                                    <div>{(contact?.patient?.nom|| "")+" "+(contact?.patient?.prenom || "")}</div>
                                                 </div>
                                             </td>
                                             <td>

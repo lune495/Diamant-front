@@ -4,23 +4,30 @@ import Swal from 'sweetalert2';
 import { useDispatch } from 'react-redux';
 import { setPageTitle } from '../../store/themeConfigSlice';
 import Btn from '../Components/Buttons/Btn';
-import { getData, sendData } from '../../Methodes';
+import { getApiUrl, getData, sendData } from '../../Methodes';
 import DropDownAction from '../Components/Buttons/DropDownAction';
 import Select from 'react-select';
 import IconBtn from '../Components/Buttons/IconBtn';
 import Loader from '../Components/Utils/Loader';
 import DocteurForm from '../Components/Forms/DocteurForm';
 import { DOCTEUR_URL, MODULE_URL } from '../../store/constants';
+import VenteForm from '../Components/Forms/VenteForm';
+import DetailVente from '../Components/Details/DetailVente';
+import ApproForm from '../Components/Forms/ApproForm';
+import DetailAppro from '../Components/Details/DetailAppro';
+import Pagination from '../Components/Pagination';
 
-const Docteur = () => {
+const Approvisionement = () => {
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch(setPageTitle('Contacts'));
     });
     const [addContactModal, setAddContactModal] = useState<any>(false);
+    const [isOpenInfo,setIsOpenInfo] = useState<any>(false);
     const [showLoader, setShowLoader] = useState(false);
     const [loading, setLoading] = useState(false);
     const [value, setValue] = useState<any>('list');
+    const [total, setTotal] = useState<number>(0);
     const [defaultParams] = useState({});
 
 
@@ -35,15 +42,29 @@ const Docteur = () => {
     const [contactList] = useState<any>([]);
     const [classe, setClasse] = useState<any>([]);
     const [filteredItemsInit, setFilteredItemsInit] = useState<any>([]);
+    const [vente, setVente] = useState<any>([]);
     const [filteredItems, setFilteredItems] = useState<any>(contactList);
 
     useEffect(()=>{
         const el:any=localStorage.getItem("apescol_user")
         const userPars=JSON.parse(el)
         setUser(userPars)
+        getVentesPaginated(15,1)
     },[])
 
-  
+     const getVentesPaginated = async (count:number,page:number) => {
+     
+     const { data } = await getData("graphql?query={approvisionnementspaginated(count:" + count + ",page:" + page + "){ metadata{current_page total per_page} data{id statut numero montant qte_total_appro type_appro fournisseur{nom_complet} created_at ligne_approvisionnements{quantity_received  produit{designation pv pa qte} }  user { id name} }}}");
+
+      let datas=[] 
+      setFilteredItems(data.data?.approvisionnementspaginated?.data || [])
+      setTotal(data.data?.approvisionnementspaginated?.metadata?.total)
+      setLoading(false)
+      
+    };
+
+
+
 
     useEffect(() => {
         setFilteredItems(() => {
@@ -55,31 +76,19 @@ const Docteur = () => {
 
     const saveUser = async(req:any) => {
         console.log("req",req)
-        if (!req.module_id) {
-            showMessage('Veuillez lui affecter son service', 'error');
-            return true;
-        }
-        if (!req.nom) {
-            showMessage('Nom obligatoire.', 'error');
-            return true;
-        }
-        if (!req.prenom) {
-            showMessage('Prenom obligatoire.', 'error');
-            return true;
-        }
+        
         setLoading(true)
         let msg=req?.id?"modifié":"ajouté"
 
             //add user
             await sendData(
-                "api/medecin",
+                "api/approvisionnements",
                 req,
                )
                 .then(async (resp:any)=> {
-                    refreshData(resp?.data?.data?.medecins[0])
+                    refreshData(resp?.data?.data?.approvisionnements[0])
                   
-                    showMessage(`Docteur ${msg} avec succès.`);
-                   console.log("resp",resp?.data)
+                    showMessage(`Approvisionement ${msg} avec succès.`);
                    
                    
                 })
@@ -94,17 +103,6 @@ const Docteur = () => {
     };
 
 
-    const getContact=async()=>{
-        const { data } = await getData(DOCTEUR_URL);
-        console.log("getDocteur",data)
-        // setFilteredItemsInit(data?.result)
-        setFilteredItems(data?.data?.medecins || [])
-        setShowLoader(false)
-    }
-
-    useEffect(() => {
-        getContact()
-     }, []);
 
 
     const refreshData=(data:any)=>{
@@ -127,7 +125,7 @@ const Docteur = () => {
 
     const editUser = (user: any = {}) => {
         setParams(user);
-        setAddContactModal(true);
+        setIsOpenInfo(true);
     };
 
     const deleteUser = (user: any = null) => {
@@ -150,13 +148,41 @@ const Docteur = () => {
         });
     };
 
+const handleDownload=(data:any)=>{
+    
+     let docUrl = document.createElement('a');
+    docUrl.target = '_blank';
+      docUrl.href = getApiUrl()+"/vente/generate-pdf/"+data.id;
+      document.body.appendChild(docUrl);
+      docUrl.click();
+  }
+const confirmClose=()=>{
+  Swal.fire({
+            title: "Confirmation fermeture",
+            text: 'Confirmez-vous la fermeture de la page?',
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Oui",
+            cancelButtonText: "Non",
+            reverseButtons:true
+            }).then((result) => {
+            if (result.isConfirmed) {
+                setAddContactModal(false)
+            }
+        });
+}
+    
+
     return (
         <div>
+
              {showLoader && (
                     <Loader/>
                 )}
             <div className="flex items-center justify-between flex-wrap gap-4">
-                <h2 className="text-xl">DOCTEUR</h2>
+                <h2 className="text-xl">APPROVISIONNEMENT</h2>
                 <div className="flex sm:flex-row flex-col sm:items-center sm:gap-3 gap-4 w-full sm:w-auto">
                 {/* <div className="mb-0 mr-5">
                         <Select  placeholder="Filter par classe" onChange={(e:any)=>{handleFilter(e?.value)}} options={classe}  isSearchable={true}/>
@@ -168,20 +194,11 @@ const Docteur = () => {
                                     <line x1="12" y1="5" x2="12" y2="19"></line>
                                     <line x1="5" y1="12" x2="19" y2="12"></line>
                                 </svg>
-                                Nouveau docteur
+                                Nouvel Approvisionement
                             </button>
                         </div>
                     </div>
-                       
-                    {/* <div className="relative">
-                        <input type="text" placeholder="Search Contacts" className="form-input py-2 ltr:pr-11 rtl:pl-11 peer" value={search} onChange={(e) => setSearch(e.target.value)} />
-                        <button type="button" className="absolute ltr:right-[11px] rtl:left-[11px] top-1/2 -translate-y-1/2 peer-focus:text-primary">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <circle cx="11.5" cy="11.5" r="9.5" stroke="currentColor" strokeWidth="1.5" opacity="0.5"></circle>
-                                <path d="M18.5 18.5L22 22" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"></path>
-                            </svg>
-                        </button>
-                    </div> */}
+                    
                 </div>
             </div>
             {value === 'list' && (
@@ -190,32 +207,41 @@ const Docteur = () => {
                         <table className="table-striped table-hover">
                             <thead>
                                 <tr>
-                                    <th>Nom</th>
-                                    <th>Prenom</th>
-                                    <th>Service</th>
-                                    <th>Actions</th>
+                                    <th>Date</th>
+                                    <th>Ref</th>
+                                    <th>Quantité</th>
+                                    <th>Total (FCFA)</th>
+                                    <th>
+                                          <div className="flex gap-4 items-center justify-center">
+                                          Actions
+                                         </div>
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {filteredItems?.map((contact: any) => {
                                     return (
-                                        <tr style={{backgroundColor:"#e0dfdc"}} key={contact.id}>
-                                            <td>
-                                              {contact?.nom}
-                                            </td>
-                                            <td>{contact?.prenom}</td>
-                                            <td>{contact?.module?.nom}</td>
-                                             <td>
-                                                <div className="flex gap-4 items-center justify-start">
-                                                    <IconBtn
-                                                        isUpdate={true}
-                                                        // isDelete={true}
-                                                        // handleDelete={()=>deleteUser(contact)}
-                                                        handleUpdate={()=>editUser(contact)}
-                                                    />
+                                        <tr key={contact.id} style={contact?.statut?{backgroundColor:"#f7d0c8"}:{}}>
+                                        <td>{new Date(contact?.created_at)?.toLocaleDateString()+ " "+ new Date(contact?.created_at)?.toLocaleTimeString()}</td>
+                                        <td>{contact?.numero}</td>
+                                        <td>{contact?.qte_total_appro}</td>
+                                        <td>{contact.montant}</td>
+                                        {/* <td><span style={{ fontSize: 14, paddingTop: 5, paddingBottom: 5, paddingRight: 20, paddingLeft: 20, borderRadius: 30, fontWeight: 900, backgroundColor: contact?.paye === true ? "#83f789" :"rgb(242 123 114)"}}>{contact?.paye?"PAYE":"NON PAYE"}</span></td> */}
+                                        <td>
+                                          <div className="flex gap-4 items-center justify-center">
+                                                  <IconBtn
+                                                    isInfos={true}
+                                                    isPdf={true}
+
+                                                    // isDelete={true}
+                                                    // handleDelete={()=>deleteUser(contact)}
+                                                    handleInfos={()=>editUser(contact)}
+                                                    handlePdf={()=>handleDownload(contact)}
+                                                   />
+                                                 
                                                 </div>
-                                            </td>
-                                        </tr>
+                                        </td>
+                                    </tr>
                                     );
                                 })}
                             </tbody>
@@ -223,9 +249,17 @@ const Docteur = () => {
                     </div>
                 </div>
             )}
-            {addContactModal && <DocteurForm loading={loading} data={params} open={addContactModal} setOpen={()=>{setAddContactModal(false);setParams({})}} handleValidate={(e:any)=>saveUser(e)}/>}
+            {total>0 && <div className="flex justify-end">
+                <Pagination
+                    total={total}
+                    per_page={15}
+                    handleClick={(e:any)=>{getVentesPaginated(15, e)}}
+                />
+        </div>}
+            {addContactModal && <ApproForm loading={loading} data={params} open={addContactModal} setOpen={()=>confirmClose()} handleValidate={(e:any)=>saveUser(e)}/>}
+            {isOpenInfo && <DetailAppro data={params} open={isOpenInfo} setOpen={()=>{setIsOpenInfo(false);setParams({})}} />}
         </div>
     );
 };
 
-export default Docteur;
+export default Approvisionement;

@@ -65,8 +65,7 @@ const SituationCaisse:FunctionComponent<BtnProps> = () => {
 
     const getStatus=async()=>{
         const { data } = await getData(CLOTURE_URL);
-        console.log("statut",data)
-        setFilteredItems(data?.data?.cloturecaisses?.map((el:any)=>({label:el.date_fermeture_fr,value:el.date_fermeture})))
+        setFilteredItems((data?.data?.cloturecaisses || [])?.map((el:any)=>({label:el.date_fermeture_fr,value:el.date_fermeture})))
         setShowLoader(false)
     }
 

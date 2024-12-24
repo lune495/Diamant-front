@@ -7,6 +7,8 @@ export const CLOTURE_URL=`graphql?query={cloturecaisses{id,date_fermeture,date_f
 export const VENTE_URL=`graphql?query={ventes(filtre_pharma:"filtre"){id statut paye nom prenom date_naissance numero montant_ht montant_ttc remise_total montant_avec_remise created_at vente_produits{qte remise montant_remise total produit{designation} }  montant montant_avec_remise qte montant_ht montant_ttc remise_total user { id name}}}`
 export const MODULE_URL=`graphql?query={modules{id,nom,medecins{nom,prenom,id},type_services{id,nom,prix}}}`
 export const TYPE_SERVICE_URL=`graphql?query={type_services{id,nom,prix,module{nom,id}}}`
+export const FAMILLE_URL=`graphql?query={familles{id,nom}}`
+export const FOURN_URL=`graphql?query={fournisseurs{id,nom_complet}}`
 export const SERVICE_URL=`graphql?query={services{id,created_at,patient{nom,prenom,date_naissance},montant_total,nature,montant,adresse,remise,
 medecin{id,nom,prenom},module{id,nom},element_services{id,type_service{nom,prix}},module{nom},user{id,name}}}`
 

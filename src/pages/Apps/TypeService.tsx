@@ -108,7 +108,7 @@ const TypeService = () => {
     const getStatus=async()=>{
         const { data } = await getData(TYPE_SERVICE_URL);
         console.log("statut",data)
-        setFilteredItems(data?.data?.type_services)
+        setFilteredItems(data?.data?.type_services || [])
         setShowLoader(false)
     }
 

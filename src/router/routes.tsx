@@ -13,6 +13,10 @@ const Suivie = lazy(() => import('../pages/Apps/Suivie'));
 const Dossier = lazy(() => import('../pages/Apps/Dossier'));
 const Service = lazy(() => import('../pages/Apps/Service'));
 const TypeService = lazy(() => import('../pages/Apps/TypeService'));
+const Famille = lazy(() => import('../pages/Apps/Famille'));
+const Produit = lazy(() => import('../pages/Apps/Produit'));
+const Vente = lazy(() => import('../pages/Apps/Vente'));
+const Approvisionement = lazy(() => import('../pages/Apps/Approvisionement'));
 const SituationCaisse = lazy(() => import('../pages/Apps/SituationCaisse'));
 
 
@@ -63,6 +67,24 @@ const routes = [
     {
         path: '/apps/caisse',
         element: <Caisse />,
+    },
+    
+    {
+        path: '/apps/produit',
+        element: <Produit />,
+    },
+    
+    {
+        path: '/apps/vente',
+        element: <Vente />,
+    },
+    {
+        path: '/apps/appro',
+        element: <Approvisionement />,
+    },
+    {
+        path: '/apps/famille',
+        element: <Famille />,
     },
     {
         path: '/apps/situation-caisse',

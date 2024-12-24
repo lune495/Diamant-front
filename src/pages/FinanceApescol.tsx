@@ -2,6 +2,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { IRootState } from '../store';
 import { setPageTitle } from '../store/themeConfigSlice';
 import { useEffect, useState } from 'react';
+import logo from '/assets/images/logo_diamant_.png'
 
 const FinanceApescol = () => {
     const dispatch = useDispatch();
@@ -30,7 +31,7 @@ const FinanceApescol = () => {
                 {/* Ajout du logo */}
                 <img
                     className="w-40"
-                    src="/assets/images/logo_diamant_.png"
+                    src={logo}
                     alt="logo"
                 />
 
